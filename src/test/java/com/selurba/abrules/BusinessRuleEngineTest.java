@@ -3,6 +3,7 @@ package com.selurba.abrules;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class BusinessRuleEngineTest {
 
@@ -21,5 +22,16 @@ class BusinessRuleEngineTest {
         engine.addAction(() -> {});
 
         assertEquals(2, engine.count());
+    }
+
+    @Test
+    void shouldExecuteOneAction() {
+        final BusinessRuleEngine engine = new BusinessRuleEngine();
+        final Action mockAction = mock(Action.class);
+
+        engine.addAction(mockAction);
+        engine.run();
+
+        verify(mockAction).execute();
     }
 }
