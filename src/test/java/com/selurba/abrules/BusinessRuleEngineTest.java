@@ -28,11 +28,15 @@ class BusinessRuleEngineTest {
             }
         });
         engine.addAction(facts -> {
-            final String jobTitle = facts.getFact("jobTitle");
-            if("President".equals(jobTitle)) {
-                final String name = facts.getFact("name");
-                //Mailer.sendEmail("sales@company.com", "Relevant customer: " + name);
-            }
+            var dealStage = Stage.valueOf(facts.getFact("stage"));
+            var amount = Double.parseDouble(facts.getFact("amount"));
+            var forecastedAmount = amount * switch (dealStage) {
+                case LEAD -> 0.2;
+                case EVALUATING -> 0.5;
+                case INTERESTED -> 0.8;
+                case CLOSED -> 1;
+            };
+            facts.setFact("forecastedAmount", String.valueOf(forecastedAmount));
         });
 
         assertEquals(2, engine.count());
